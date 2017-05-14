@@ -2,12 +2,11 @@
    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
    :alt: License: AGPL-3
 
-==========================
-ShopInvader Product Link
-==========================
+==============================
+ShopInvader Price per Quantity
+==============================
 
-This module extends the functionality of cross-selling/up-selling/relateds to support your
-ShopInvader Shop
+Thsi module extract the price per quantity in order to make in available in your shopinvader website
 
 Installation
 ============
@@ -24,9 +23,7 @@ No configuration is required
 Usage
 =====
 
-To use this module, you need to:
-
-#. Go to your product menu and add link in the tab "link"
+Configure your pricelist like usual
 
 Known issues / Roadmap
 ======================
@@ -55,7 +52,7 @@ Funders
 The development of this module has been financially supported by:
 
 * Akretion R&D
-* Adaptoo
+* Encredubuit
 
 Maintainer
 ----------
