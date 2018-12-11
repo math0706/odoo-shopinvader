@@ -6,9 +6,11 @@
         <field name="inherit_id"
                ref="shopinvader.shopinvader_backend_view_form"/>
         <field name="arch" type="xml">
-            <field name="auth_api_key_id" position="after">
-                <field name="se_backend_id"/>
-            </field>
+            <group name="filter_ids" position="after">
+                <group name="filter_ids" colspan="4">
+                    <field name="se_backend_id"/>
+                </group>
+            </group>
             <group name="category" position="after">
                 <group name="indexes" string="Search engined indexes" col="10" colspan="4">
                     <button
