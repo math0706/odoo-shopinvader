@@ -18,6 +18,7 @@ class ClaimCase(CommonCase):
         self.sol_2 = self.env.ref('shopinvader.sale_order_line_5')
         self.sol_3 = self.env.ref('shopinvader.sale_order_line_6')
         self.claim_categ = self.env.ref('crm_claim_rma.categ_claim10')
+        self.warehouse = self.env['crm.claim']._get_default_warehouse()
 
     def test_get_claim(self):
         res = self.service.get({})
@@ -51,10 +52,14 @@ class ClaimCase(CommonCase):
         self.assertEqual(claim.partner_id, self.partner)
         self.assertEqual(len(claim.claim_line_ids), 1)
         self.assertEqual(claim.categ_id, self.claim_categ)
+        self.assertEqual(claim.warehouse_id, self.warehouse)
         claim_line = claim.claim_line_ids[0]
+        location = self.env['claim.line'].get_destination_location(
+            claim_line.product_id, self.warehouse)
         self.assertEqual(claim_line.product_id, self.sol_1.product_id)
         self.assertEqual(claim_line.product_returned_quantity, 2)
         self.assertEqual(claim.invoice_id, so.invoice_ids[0])
+        self.assertEqual(claim_line.location_dest_id, location)
 
     def test_empty_claim(self):
         data = {

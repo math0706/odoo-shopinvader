@@ -150,6 +150,7 @@ class ClaimService(ShopinvaderService):
             [('id', '=', params['subject_id'])])
         claim_type = self.env.ref('crm_claim_type.crm_claim_type_customer').id
         backend_id = self.backend_record.id
+        warehouse = self.env['crm.claim']._get_default_warehouse()
         vals = {
             'categ_id': params['subject_id'],
             'name': categ.name,
@@ -157,6 +158,7 @@ class ClaimService(ShopinvaderService):
             'partner_id': self.partner.id,
             'claim_type': claim_type,
             'shopinvader_backend_id': backend_id,
+            'warehouse_id': warehouse.id,
             'claim_line_ids': []
         }
         vals = self.env['crm.claim'].play_onchanges(vals, ['partner_id'])
@@ -181,10 +183,20 @@ class ClaimService(ShopinvaderService):
                       'come from the same sale order'))
             if order.invoice_ids and not vals.get('invoice_id', False):
                 vals['invoice_id'] = order.invoice_ids[0].id
-            vals['claim_line_ids'].append((0, 0, {
+            location_dest = self.env['claim.line'].get_destination_location(
+                so_line.product_id, warehouse)
+            line_vals = {
                 'product_id': so_line.product_id.id,
                 'product_returned_quantity': line['qty'],
-                'claim_origin': 'none'}))
+                'claim_origin': 'none',
+                'location_dest_id': location_dest.id
+            }
+            if so_line.invoice_lines:
+                invoice_line = so_line.invoice_lines[0]
+                line_vals.update({
+                    'invoice_line_id': invoice_line.id,
+                    'unit_sale_price': invoice_line.price_unit})
+            vals['claim_line_ids'].append((0, 0, line_vals))
         if not vals['claim_line_ids']:
             raise UserError(_('You have to select an item'))
         return vals
