@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
     <record id="product_product_39" model="product.product">
@@ -110,7 +110,6 @@
     <record id="product_product_49" model="product.product">
         <field name="name">Convenience Concepts Designs2Go Oslo - meuble TV</field>
         <field name="categ_id" ref="product_category_29"></field>
-        <field name="list_price">156.4</field>
         <field name="standard_price">156.4</field>
         <field name="uom_id" ref="product.product_uom_unit"></field>
         <field name="uom_po_id" ref="product.product_uom_unit"></field>
@@ -125,7 +124,6 @@
         <field name="categ_id" ref="product_category_29"></field>
         <field name="uom_po_id" ref="product.product_uom_unit"></field>
         <field name="uom_id" ref="product.product_uom_unit"></field>
-        <field name="name">Sauder 420011 Coffee Table, Furniture, Craftsman Oak</field>
         <field name="attribute_value_ids" eval="[(6,0,[ref('product_attribute_value_7')])]"></field>
         <field name="list_price">143.99</field>
         <field name="standard_price">143.99</field>
