@@ -19,7 +19,7 @@
         #  'product_variant_default_code',
     ],
     "data": ["data/ir_export_product.xml"],
-    "demo": ["demo/product_brand_demo.xml"],
+    "demo": ["demo/product_brand_demo.xml", "demo/product_product_demo.xml"],
     "installable": True,
     "application": True,
 }
