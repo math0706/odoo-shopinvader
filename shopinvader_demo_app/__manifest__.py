@@ -21,6 +21,7 @@
      'data/ir_export_product.xml',
  ],
  'demo': [
+   "demo/product_brand_demo.xml"
  ],
  'installable': True,
  'application': True,
