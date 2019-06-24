@@ -181,9 +181,10 @@ class LocomotiveBackend(models.Model):
         config = self._extract_json_configuration()
         fp = StringIO()
         fp.write(yaml.dump(
-            {'_store': config},
+            {'metafields:': {'_store': config}},
             encoding='utf-8',
-            default_style='>'))
+            default_style='>',
+            width=10000))
         fp.seek(0)
         data = base64.b64encode(fp.read())
         wizard = self.env['shopinvader.store.config'].create({
