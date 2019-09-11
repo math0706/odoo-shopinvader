@@ -45,6 +45,27 @@ class InvoiceService(Component):
         schema = {"data": {"type": "dict", "schema": invoice_schema}}
         return schema
 
+    def _validator_return_get(self):
+        """
+        Output validator for the search
+        :return: dict
+        """
+        invoice_schema = {
+            "invoice_id": {"type": "integer"},
+            "number": {"type": "string"},
+            "date_invoice": {"type": "string"},
+            "amount_total": {"type": "float"},
+            "amount_tax": {"type": "float"},
+            "amount_untaxed": {"type": "float"},
+            "amount_due": {"type": "float"},
+            "type": {"type": "string"},
+            "type_label": {"type": "string"},
+            "state": {"type": "string"},
+            "state_label": {"type": "string"},
+        }
+        schema = {"data": {"type": "dict", "schema": invoice_schema}}
+        return schema
+
     def _validator_return_search(self):
         """
         Output validator for the search
