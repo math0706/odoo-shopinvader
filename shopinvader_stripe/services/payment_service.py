@@ -20,8 +20,12 @@ class PaymentService(models.Model):
 
     def _process_payment_params(self, cart, payment_params):
         transaction = self.generate(cart, **payment_params)
-        if transaction.url:
-            return {'redirect_to': transaction.url}
+        intent = json.loads(transaction.data)
+        if intent["status"] == "requires_action":
+            return {
+                "requires_action": True,
+                "payment_intent_client_secret": intent["client_secret"],
+            }
         elif transaction.state in ('succeeded', 'to_capture'):
             return {'action_confirm_cart': True}
         else:
@@ -35,5 +39,5 @@ class PaymentService(models.Model):
 
     def _get_transaction_from_return(self, params):
         return self.env['gateway.transaction'].search([
-            ('external_id', '=', params['source']),
-            ('state', '=', 'pending')])
+            ('external_id', '=', params['stripe_payment_intent_id']),
+            ])
