@@ -8,7 +8,7 @@ from openerp.addons.shopinvader.services.helper import (
     ShopinvaderService)
 from openerp.addons.shopinvader.services.cart import shopinvader, CartService
 from openerp.tools.translate import _
-
+import stripe
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -42,7 +42,8 @@ class StripeTransactionService(ShopinvaderService):
             return {"error": _("Payment Error")}
 
     @secure_params
-    def update(self, params):
+    def create(self, params):
+        stripe_payment_intent_id = params['stripe_payment_intent_id']
         provider = self.env['payment.service.stripe']
         transaction = provider._get_transaction_from_return(params)
         intent = stripe.PaymentIntent.confirm(
@@ -50,3 +51,6 @@ class StripeTransactionService(ShopinvaderService):
             api_key=provider._api_key,
         )
         return self._generate_stripe_response(intent)
+
+    def _validator_create(self):
+        return {'stripe_payment_intent_id': {'type': 'string'}}

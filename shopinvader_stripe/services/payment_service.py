@@ -6,6 +6,7 @@
 from openerp import models
 from openerp.exceptions import Warning as UserError
 from openerp.tools.translate import _
+import json
 
 
 class PaymentService(models.Model):
@@ -23,6 +24,7 @@ class PaymentService(models.Model):
         intent = json.loads(transaction.data)
         if intent["status"] == "requires_action":
             return {
+                "direct_response": True,
                 "requires_action": True,
                 "payment_intent_client_secret": intent["client_secret"],
             }

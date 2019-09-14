@@ -68,7 +68,7 @@ class CartService(AbstractSaleService):
                     '_store/check_transaction')
                 response = self.env[provider]._process_payment_params(
                     cart, provider_params)
-                if response.get('redirect_to'):
+                if response.get('redirect_to') or response.get("direct_response"):
                     return response
                 elif response.get('action_confirm_cart'):
                     # TODO find a more elengant way to do it
