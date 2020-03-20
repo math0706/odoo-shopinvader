@@ -3,14 +3,12 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 import logging
 
-from odoo import api, fields, models
-
-from .models_mixin import TestMixin
+from openerp import api, fields, models
 
 _logger = logging.getLogger(__name__)
 
 
-class UrlBackendFake(models.Model, TestMixin):
+class UrlBackendFake(models.Model):
 
     _name = "url.backend.fake"
     _description = "Url Backend"
@@ -18,7 +16,7 @@ class UrlBackendFake(models.Model, TestMixin):
     name = fields.Char(required=True)
 
 
-class ResPartnerAddressableFake(models.Model, TestMixin):
+class ResPartnerAddressableFake(models.Model):
     _name = "res.partner.addressable.fake"
     _inherit = "abstract.url"
     _inherits = {"res.partner": "record_id"}

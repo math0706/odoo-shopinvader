@@ -2,18 +2,14 @@
 # Copyright 2019 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 import mock
-from odoo.exceptions import ValidationError
-from odoo.tests import SavepointCase
-
-from .models import ResPartnerAddressableFake, UrlBackendFake
+from openerp.exceptions import ValidationError
+from openerp.tests import SavepointCase
 
 
 class TestAbstractUrl(SavepointCase):
     @classmethod
     def setUpClass(cls):
         super(TestAbstractUrl, cls).setUpClass()
-        UrlBackendFake._test_setup_model(cls.env)
-        ResPartnerAddressableFake._test_setup_model(cls.env)
         cls.lang = cls.env.ref("base.lang_en")
         cls.UrlUrl = cls.env["url.url"]
         cls.ResPartnerAddressable = cls.env["res.partner.addressable.fake"]
@@ -22,12 +18,6 @@ class TestAbstractUrl(SavepointCase):
         )
         cls.name = "partner name"
         cls.auto_key = "partner-name"
-
-    @classmethod
-    def tearDownClass(cls):
-        ResPartnerAddressableFake._test_teardown_model(cls.env)
-        UrlBackendFake._test_teardown_model(cls.env)
-        super(TestAbstractUrl, cls).tearDownClass()
 
     def _get_default_partner_value(self):
         return {
