@@ -3,15 +3,16 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 import mimetypes
 
-from odoo import _
-from odoo.addons.base_rest.components.service import (
+from openerp import _
+from openerp.addons.base_rest.components.service import (
     skip_secure_response,
     to_int,
 )
-from odoo.addons.component.core import Component
-from odoo.exceptions import MissingError
-from odoo.http import content_disposition, request
-from odoo.osv import expression
+from openerp.addons.component.core import Component
+from openerp.addons.web.controllers.main import content_disposition
+from openerp.exceptions import MissingError
+from openerp.http import request
+from openerp.osv import expression
 
 
 class InvoiceService(Component):

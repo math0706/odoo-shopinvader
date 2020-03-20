@@ -3,7 +3,7 @@
 # @author Sébastien BEAU <sebastien.beau@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import fields
+from openerp import fields
 
 from .common import CommonCase
 
@@ -58,24 +58,24 @@ class CartClearTest(object):
         clear_option = self.backend.clear_cart_options
         if clear_option == "clear":
             self.assertFalse(new_carts)
-            self.assertEquals(cart_id, cart.exists().id)
+            self.assertEqual(cart_id, cart.exists().id)
             self.assertIsInstance(session, dict)
-            self.assertEquals(session.get("cart_id"), cart_id)
+            self.assertEqual(session.get("cart_id"), cart_id)
             self.assertFalse(cart.order_line)
         elif clear_option == "delete":
             self.assertFalse(cart.exists())
             self.assertIsInstance(session, dict)
-            self.assertEquals(session.get("cart_id"), 0)
+            self.assertEqual(session.get("cart_id"), 0)
         elif clear_option == "cancel":
             # We only check that the previous cart is cancelled.
             # The new cart will be created if the customer add a new item.
             # Test the creation of new cart is not the goal of this test.
-            self.assertEquals(len(new_carts), 0)
+            self.assertEqual(len(new_carts), 0)
             self.assertIsInstance(session, dict)
             self.assertFalse(session.get("cart_id"))
             # The previous should exists
-            self.assertEquals(cart_id, cart.exists().id)
-            self.assertEquals(cart.state, "cancel")
+            self.assertEqual(cart_id, cart.exists().id)
+            self.assertEqual(cart.state, "cancel")
         return True
 
     def test_cart_clear(self):
@@ -135,7 +135,7 @@ class AnonymousCartCase(CartCase, CartClearTest):
         )
         domain = [("name", "=", description), ("date_created", ">=", now)]
         # It should not create any queue job because the user is not logged
-        self.assertEquals(self.env["queue.job"].search_count(domain), 0)
+        self.assertEqual(self.env["queue.job"].search_count(domain), 0)
 
     def test_cart_pricelist_apply(self):
         """
@@ -154,7 +154,8 @@ class AnonymousCartCase(CartCase, CartClearTest):
         # Create 2 pricelists
         pricelist_values = {
             "name": "Custom pricelist 1",
-            "discount_policy": "without_discount",
+            "visible_discount": True,
+            "type": "sale",
             "item_ids": [
                 (
                     0,
@@ -171,9 +172,15 @@ class AnonymousCartCase(CartCase, CartClearTest):
         first_pricelist = self.env["product.pricelist"].create(
             pricelist_values
         )
+        pricelist_version_values = {
+            "name": "Custom pricelist version 1",
+            "pricelist_id": first_pricelist.id,
+        }
+        self.env["product.pricelist.version"].create(pricelist_version_values)
         pricelist_values = {
             "name": "Custom pricelist 2",
-            "discount_policy": "without_discount",
+            "visible_discount": True,
+            "type": "sale",
             "item_ids": [
                 (
                     0,
@@ -194,6 +201,12 @@ class AnonymousCartCase(CartCase, CartClearTest):
         second_pricelist = self.env["product.pricelist"].create(
             pricelist_values
         )
+        pricelist_version_values = {
+            "name": "Custom pricelist version 2",
+            "pricelist_id": second_pricelist.id,
+        }
+        self.env["product.pricelist.version"].create(pricelist_version_values)
+
         # First, create the SO manually
         sale = self.env["sale.order"].create(
             {
@@ -219,7 +232,7 @@ class AnonymousCartCase(CartCase, CartClearTest):
         )
         new_line_values.update(line_values)
         line = so_line_obj.create(new_line_values)
-        expected_price = line.price_total
+        expected_price = line.price_subtotal
         # Then create a new SO/Cart by shopinvader services
         # Force to use this pricelist for the backend
         self.backend.write({"pricelist_id": second_pricelist.id})
@@ -235,7 +248,7 @@ class AnonymousCartCase(CartCase, CartClearTest):
             )
         )
         self.assertEqual(sale_order.pricelist_id, second_pricelist)
-        self.assertAlmostEqual(so_line.price_total, expected_price)
+        self.assertAlmostEqual(so_line.price_subtotal, expected_price)
         self.assertAlmostEqual(sale_order.amount_total, expected_price)
         self.assertAlmostEqual(
             data.get("lines").get("items")[0].get("amount").get("total"),
@@ -253,7 +266,7 @@ class AnonymousCartCase(CartCase, CartClearTest):
         cart = self.service._get()
         cart_bis = self.service._get()
         self.assertEqual(cart, cart_bis)
-        cart.write({"state": "sale"})
+        cart.action_button_confirm()
         cart_bis = self.service._get()
         self.assertNotEqual(cart, cart_bis)
         self.assertEqual(cart_bis.typology, "cart")
@@ -324,7 +337,7 @@ class ConnectedCartCase(CommonConnectedCartCase, CartClearTest):
 
     def test_confirm_cart_maually(self):
         self.assertEqual(self.cart.typology, "cart")
-        self.cart.action_confirm()
+        self.cart.action_button_confirm()
         self.assertEqual(self.cart.typology, "sale")
 
     def test_ask_email1(self):
@@ -342,7 +355,7 @@ class ConnectedCartCase(CommonConnectedCartCase, CartClearTest):
             notif, self.cart._name, self.cart.id
         )
         domain = [("name", "=", description), ("date_created", ">=", now)]
-        self.assertEquals(self.env["queue.job"].search_count(domain), 1)
+        self.assertEqual(self.env["queue.job"].search_count(domain), 1)
 
     def test_ask_email2(self):
         """
@@ -360,7 +373,7 @@ class ConnectedCartCase(CommonConnectedCartCase, CartClearTest):
             notif, self.cart._name, self.cart.id
         )
         domain = [("name", "=", description), ("date_created", ">=", now)]
-        self.assertEquals(self.env["queue.job"].search_count(domain), 0)
+        self.assertEqual(self.env["queue.job"].search_count(domain), 0)
 
     def test_ask_email3(self):
         """
@@ -378,7 +391,7 @@ class ConnectedCartCase(CommonConnectedCartCase, CartClearTest):
             notif, self.cart._name, self.cart.id
         )
         domain = [("name", "=", description), ("date_created", ">=", now)]
-        self.assertEquals(self.env["queue.job"].search_count(domain), 0)
+        self.assertEqual(self.env["queue.job"].search_count(domain), 0)
 
     def test_cart_robustness(self):
         """
@@ -390,7 +403,7 @@ class ConnectedCartCase(CommonConnectedCartCase, CartClearTest):
         cart = self.service._get()
         cart_bis = self.service._get()
         self.assertEqual(cart, cart_bis)
-        cart.write({"state": "sale"})
+        cart.action_button_confirm()
         cart_bis = self.service._get()
         self.assertNotEqual(cart, cart_bis)
         self.assertEqual(cart_bis.typology, "cart")
@@ -464,7 +477,7 @@ class ConnectedCartNoTaxCase(CartCase):
         self.assertEqual(cart.partner_id, self.partner)
         self.assertEqual(cart.partner_shipping_id, self.address)
         self.assertEqual(cart.partner_invoice_id, self.address)
-        self.assertEqual(cart.fiscal_position_id, self.default_fposition)
+        self.assertEqual(cart.fiscal_position, self.default_fposition)
         self.assertNotEqual(cart.amount_total, cart.amount_untaxed)
 
     def test_set_shipping_address_without_tax(self):
@@ -475,7 +488,7 @@ class ConnectedCartNoTaxCase(CartCase):
         self.assertEqual(cart.partner_id, self.partner)
         self.assertEqual(cart.partner_shipping_id, self.partner)
         self.assertEqual(cart.partner_invoice_id, self.partner)
-        self.assertEqual(cart.fiscal_position_id, self.fposition)
+        self.assertEqual(cart.fiscal_position, self.fposition)
         self.assertEqual(cart.amount_total, cart.amount_untaxed)
 
     def test_edit_shipping_address_without_tax(self):
@@ -490,10 +503,10 @@ class ConnectedCartNoTaxCase(CartCase):
         self.assertEqual(cart.partner_id, self.partner)
         self.assertEqual(cart.partner_shipping_id, self.address)
         self.assertEqual(cart.partner_invoice_id, self.address)
-        self.assertEqual(cart.fiscal_position_id, self.default_fposition)
+        self.assertEqual(cart.fiscal_position, self.default_fposition)
         self.assertNotEqual(cart.amount_total, cart.amount_untaxed)
 
         self.address.write({"country_id": self.env.ref("base.us").id})
         self.assertEqual(cart.partner_id, self.partner)
-        self.assertEqual(cart.fiscal_position_id, self.fposition)
+        self.assertEqual(cart.fiscal_position, self.fposition)
         self.assertEqual(cart.amount_total, cart.amount_untaxed)

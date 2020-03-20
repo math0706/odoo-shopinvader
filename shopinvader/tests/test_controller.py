@@ -6,9 +6,9 @@ import unittest
 from uuid import uuid4
 
 import requests
-from odoo.addons.server_environment import serv_config
-from odoo.exceptions import MissingError
-from odoo.tools import mute_logger
+from openerp.addons.server_environment import serv_config
+from openerp.exceptions import MissingError
+from openerp.tools import mute_logger
 
 from .common import ShopinvaderRestCase
 
@@ -57,7 +57,8 @@ class ShopinvaderControllerCase(ShopinvaderRestCase):
         self.assertEqual(ids, expected_ids)
 
     @mute_logger(
-        "odoo.addons.auth_api_key.models.ir_http", "odoo.addons.base_rest.http"
+        "openerp.addons.auth_api_key.models.ir_http",
+        "openerp.addons.base_rest.http",
     )
     def test_get_addresses_with_wrong_api_key(self):
         result = requests.get(

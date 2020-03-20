@@ -4,7 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 # pylint: disable=consider-merging-classes-inherited,method-required-super
 
-from odoo.addons.component.core import Component
+from openerp.addons.component.core import Component
 
 
 class CustomerService(Component):

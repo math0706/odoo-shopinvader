@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright 2018 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-from odoo import api, fields, models
+from openerp import api, fields, models
 
 
 class ShopinvaderCategoryBindingWizard(models.TransientModel):
@@ -61,7 +61,6 @@ class ShopinvaderCategoryBindingWizard(models.TransientModel):
                     lambda p: p.backend_id.id == backend.id
                     and p.lang_id.id == lang.id
                 )
-                bind_record = bind_record.with_prefetch(self._prefetch)
                 if not bind_record:
                     data = {
                         "record_id": category.id,

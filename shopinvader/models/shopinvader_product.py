@@ -3,7 +3,7 @@
 # @author Sébastien BEAU <sebastien.beau@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from openerp import api, fields, models
 
 
 class ShopinvaderProduct(models.Model):
@@ -89,7 +89,8 @@ class ShopinvaderProduct(models.Model):
             for categ in categs:
                 parents = self.env["shopinvader.category"].search(
                     [
-                        ("record_id", "parent_of", categ.id),
+                        ("parent_left", "<=", categ.parent_left),
+                        ("parent_right", ">=", categ.parent_right),
                         ("backend_id", "=", record.backend_id.id),
                         ("lang_id", "=", record.lang_id.id),
                     ]
@@ -160,11 +161,8 @@ class ShopinvaderProduct(models.Model):
         Toggle the active field
         :return: dict
         """
-        actual_active = self.filtered(lambda s: s.active).with_prefetch(
-            self._prefetch
-        )
+        actual_active = self.filtered(lambda s: s.active)
         actual_inactive = self - actual_active
-        actual_inactive = actual_inactive.with_prefetch(self._prefetch)
         if actual_inactive:
             actual_inactive.write({"active": True})
         if actual_active:

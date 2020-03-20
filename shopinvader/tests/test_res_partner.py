@@ -4,8 +4,8 @@
 
 from datetime import datetime
 
-from odoo.addons.component.tests.common import SavepointComponentCase
-from odoo.exceptions import ValidationError
+from openerp.addons.component.tests.common import SavepointComponentCase
+from openerp.exceptions import ValidationError
 
 
 class TestResPartner(SavepointComponentCase):

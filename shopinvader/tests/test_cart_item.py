@@ -142,15 +142,16 @@ class AbstractItemCase(object):
             }
         )
         # we create a new pricelist for the product with a discount of 10%
+        pricelist_version = self.env["product.pricelist.version"].search(
+            [("pricelist_id", "=", self.pricelist.id)]
+        )[0]
         self.env["product.pricelist.item"].create(
             {
-                "base": "list_price",
-                "percent_price": 10,
+                "base": 1,
+                "price_discount": -0.1,
                 "name": "Product discount Ipod",
-                "pricelist_id": self.pricelist.id,
-                "compute_price": "percentage",
-                "applied_on": "0_product_variant",
                 "product_id": self.product_3.id,
+                "price_version_id": pricelist_version.id,
             }
         )
         cart_data = self.add_item(self.product_3.id, 1)
@@ -159,7 +160,7 @@ class AbstractItemCase(object):
         return cart_data["lines"]["items"][0]["amount"]
 
     def test_pricelist_product_price_unit_without_discount(self):
-        self.pricelist.discount_policy = "without_discount"
+        self.pricelist.visible_discount = True
         amount = self._test_pricelist_product()
         # into the cart, the price must be the price without discount
         self.assertEqual(amount["price"], 16.5)
@@ -168,7 +169,7 @@ class AbstractItemCase(object):
         self.assertEqual(amount["total"], 14.85)
 
     def test_pricelist_product_price_unit_with_discount(self):
-        self.pricelist.discount_policy = "with_discount"
+        self.pricelist.visible_discount = False
         amount = self._test_pricelist_product()
         # into the cart, the price must be the price with discount
         self.assertEqual(amount["price"], 14.85)

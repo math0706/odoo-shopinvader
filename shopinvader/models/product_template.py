@@ -4,7 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 from contextlib import contextmanager
 
-from odoo import api, fields, models
+from openerp import api, fields, models
 
 
 class ProductTemplate(models.Model):
@@ -61,10 +61,10 @@ class ProductTemplate(models.Model):
         self_name = {r: r.name for r in self}
         yield
         for record in self:
-            if not record.suspend_security().shopinvader_bind_ids:
+            if not record.sudo().shopinvader_bind_ids:
                 continue
             if record.name != self_name.get(record):
-                record.suspend_security().shopinvader_bind_ids._sync_urls()
+                record.sudo().shopinvader_bind_ids._sync_urls()
 
     @api.multi
     def write(self, vals):

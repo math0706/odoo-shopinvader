@@ -3,7 +3,7 @@
 # Sébastien BEAU <sebastien.beau@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo.addons.component.core import AbstractComponent
+from openerp.addons.component.core import AbstractComponent
 
 
 class AbstractSaleService(AbstractComponent):
@@ -51,14 +51,15 @@ class AbstractSaleService(AbstractComponent):
             )[0]
         else:
             product = {}
+        price_tax = self.env["sale.order"]._amount_line_tax(line)
         return {
             "id": line.id,
             "product": product,
             "amount": {
                 "price": line.price_unit,
                 "untaxed": line.price_subtotal,
-                "tax": line.price_tax,
-                "total": line.price_total,
+                "tax": price_tax,
+                "total": line.price_subtotal + price_tax,
                 "total_without_discount": line.price_total_no_discount,
             },
             "qty": line.product_uom_qty,

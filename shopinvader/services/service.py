@@ -4,10 +4,10 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
-from odoo import _
-from odoo.addons.component.core import AbstractComponent
-from odoo.exceptions import MissingError, UserError
-from odoo.osv import expression
+from openerp import _
+from openerp.addons.component.core import AbstractComponent
+from openerp.exceptions import MissingError, UserError
+from openerp.osv import expression
 
 from .. import shopinvader_response
 
@@ -35,7 +35,7 @@ class BaseShopinvaderService(AbstractComponent):
         return self.work.client_header
 
     def _scope_to_domain(self, scope):
-        # Convert the liquid scope syntax to the odoo domain
+        # Convert the liquid scope syntax to the openerp domain
         try:
             OPERATORS = {
                 "gt": ">",
@@ -142,7 +142,7 @@ class BaseShopinvaderService(AbstractComponent):
     def shopinvader_response(self):
         """
         An instance of
-        ``odoo.addons.shopinvader.shopinvader_response.ShopinvaderResponse``.
+        ``openerp.addons.shopinvader.shopinvader_response.ShopinvaderResponse``.
         """
         return shopinvader_response.get()
 

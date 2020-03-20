@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 from uuid import uuid4
 
-from odoo.addons.shopinvader.tests.common import ProductCommonCase
+from openerp.addons.shopinvader.tests.common import ProductCommonCase
 
 
 class TestShopinvaderVariantTest(ProductCommonCase):
@@ -27,7 +27,7 @@ class TestShopinvaderVariantTest(ProductCommonCase):
                 expected_result = u"{} | {}".format(
                     variant.name, backend.website_public_name or u""
                 )
-            self.assertEquals(result, expected_result)
+            self.assertEqual(result, expected_result)
 
     def test_public_name_empty(self):
         """
@@ -41,8 +41,8 @@ class TestShopinvaderVariantTest(ProductCommonCase):
         for variant in self.shopinvader_variants:
             title = str(uuid4())
             variant.write({"seo_title": title})
-            self.assertEquals(variant.seo_title, title)
-            self.assertEquals(variant.manual_seo_title, title)
+            self.assertEqual(variant.seo_title, title)
+            self.assertEqual(variant.manual_seo_title, title)
         # Invalidate cache to ensure data stay in memory
         self.shopinvader_variants.invalidate_cache()
         self._check_expected_seo_name(self.backend, self.shopinvader_variants)

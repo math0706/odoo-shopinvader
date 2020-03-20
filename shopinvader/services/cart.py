@@ -6,10 +6,10 @@
 
 import logging
 
-from odoo.addons.base_rest.components.service import to_int
-from odoo.addons.component.core import Component
-from odoo.exceptions import UserError
-from odoo.tools.translate import _
+from openerp.addons.base_rest.components.service import to_int
+from openerp.addons.component.core import Component
+from openerp.exceptions import UserError
+from openerp.tools.translate import _
 from werkzeug.exceptions import NotFound
 
 _logger = logging.getLogger(__name__)
@@ -143,9 +143,14 @@ class CartService(Component):
         with self.env.norecompute():
             vals = {"product_uom_qty": product_qty}
             new_values = item.play_onchanges(vals, vals.keys())
+            new_values.update(
+                self._play_cart_item_onchanges(cart, vals, existing_item=item)
+            )
             # clear cache after play onchange
             real_line_ids = [line.id for line in cart.order_line if line.id]
-            cart._cache["order_line"] = tuple(real_line_ids)
+            cart._cache["order_line"] = self.env["sale.order.line"].browse(
+                real_line_ids
+            )
             vals.update(new_values)
             item.write(vals)
         cart.recompute()
@@ -194,6 +199,51 @@ class CartService(Component):
             raise NotImplementedError(_("Missing feature to clear the cart!"))
         return cart
 
+    def _play_cart_item_onchanges(self, cart, vals, existing_item=None):
+        product_id = (
+            existing_item
+            and existing_item.product_id.id
+            or vals.get("product_id", False)
+        )
+        product_uom_qty = (
+            existing_item
+            and existing_item.product_uom_qty
+            or vals.get("product_uom_qty", 1)
+        )
+        product_uom = (
+            existing_item
+            and existing_item.product_uom.id
+            or vals.get("product_uom", False)
+        )
+        product_uos_qty = (
+            existing_item
+            and existing_item.product_uos_qty
+            or vals.get("product_uos_qty", 1)
+        )
+        product_uos = (
+            existing_item
+            and existing_item.product_uos.id
+            or vals.get("product_uos", False)
+        )
+        name = existing_item and existing_item.name or vals.get("name", False)
+        new_values = self.env["sale.order.line"].product_id_change(
+            cart.pricelist_id.id,
+            product_id,
+            qty=product_uom_qty,
+            uom=product_uom,
+            qty_uos=product_uos_qty,
+            uos=product_uos,
+            name=name,
+            partner_id=cart.partner_id.id,
+            lang=False,
+            update_tax=True,
+            date_order=cart.date_order,
+            packaging=False,
+            fiscal_position=cart.fiscal_position.id,
+            flag=True,
+        )["value"]
+        return new_values
+
     def _add_item(self, cart, params):
         existing_item = self._check_existing_cart_item(cart, params)
         if existing_item:
@@ -214,6 +264,7 @@ class CartService(Component):
                     .play_onchanges(vals, vals.keys())
                 )
                 vals.update(new_values)
+                vals.update(self._play_cart_item_onchanges(cart, vals))
                 self.env["sale.order.line"].create(vals)
             cart.recompute()
 

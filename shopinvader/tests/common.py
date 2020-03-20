@@ -6,14 +6,14 @@
 
 from contextlib import contextmanager
 
-from odoo.addons.base_rest.controllers.main import _PseudoCollection
-from odoo.addons.base_rest.tests.common import BaseRestCase
-from odoo.addons.component.core import WorkContext
-from odoo.addons.component.tests.common import ComponentMixin
-from odoo.addons.queue_job.job import Job
-from odoo.addons.server_environment import serv_config
-from odoo.addons.shopinvader import shopinvader_response
-from odoo.tests import SavepointCase
+from openerp.addons.base_rest.controllers.main import _PseudoCollection
+from openerp.addons.base_rest.tests.common import BaseRestCase
+from openerp.addons.component.core import WorkContext
+from openerp.addons.component.tests.common import ComponentMixin
+from openerp.addons.queue_job.job import Job
+from openerp.addons.server_environment import serv_config
+from openerp.addons.shopinvader import shopinvader_response
+from openerp.tests import SavepointCase
 
 
 class CommonCase(SavepointCase, ComponentMixin):

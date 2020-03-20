@@ -6,17 +6,16 @@
 from contextlib import contextmanager
 from uuid import uuid4
 
-from odoo import fields
+from openerp import fields
 
 from .common import ProductCommonCase
 
 
 class ProductCase(ProductCommonCase):
-    def install_lang(self, lang_xml_id):
-        lang = self.env.ref(lang_xml_id)
-        wizard = self.env["base.language.install"].create({"lang": lang.code})
+    def install_lang(self, lang_code):
+        wizard = self.env["base.language.install"].create({"lang": lang_code})
         wizard.lang_install()
-        return lang
+        return self.env["res.lang"].search([("code", "=", lang_code)])
 
     def test_create_shopinvader_variant(self):
         self.assertEqual(
@@ -106,9 +105,9 @@ class ProductCase(ProductCommonCase):
                 shopinv_variant_names.get(shopinv_variant)
                 != shopinv_variant.name
             ):
-                self.assertEquals(len(new_url), 1)
+                self.assertEqual(len(new_url), 1)
             else:
-                self.assertEquals(len(new_url), 0)
+                self.assertEqual(len(new_url), 0)
 
     def test_product_name_url(self):
         """
@@ -165,6 +164,7 @@ class ProductCase(ProductCommonCase):
         price = self.shopinvader_variant._get_price(
             base_price_list, tax_exclude_fiscal_position
         )
+        #        import pdb; pdb.set_trace()
         self.assertDictEqual(
             price,
             {
@@ -193,7 +193,7 @@ class ProductCase(ProductCommonCase):
         # base_price_list doesn't define a tax mapping. We are tax included
         # we modify the discount_policy
         base_price_list = self.env.ref("product.list0")
-        base_price_list.discount_policy = "without_discount"
+        base_price_list.visible_discount = True
         fiscal_position_fr = self.env.ref("shopinvader.fiscal_position_0")
         price = self.shopinvader_variant._get_price(
             base_price_list, fiscal_position_fr
@@ -210,7 +210,7 @@ class ProductCase(ProductCommonCase):
         # promotion price list define a discount of 20% on all product
         # we modify the discount_policy
         promotion_price_list = self.env.ref("shopinvader.pricelist_1")
-        promotion_price_list.discount_policy = "without_discount"
+        promotion_price_list.visible_discount = True
         price = self.shopinvader_variant._get_price(
             promotion_price_list, fiscal_position_fr
         )
@@ -260,16 +260,16 @@ class ProductCase(ProductCommonCase):
         categ = self.env.ref("product.product_category_1")
         shopinvader_categ = categ.shopinvader_bind_ids
         self.assertEqual(len(shopinvader_categ), 1)
-        self.assertEqual(len(shopinvader_categ.shopinvader_child_ids), 3)
+        self.assertEqual(len(shopinvader_categ.shopinvader_child_ids), 6)
 
     def test_category_child_with_two_lang(self):
-        lang = self.install_lang("base.lang_fr")
+        lang = self.install_lang("fr_FR")
         self.backend.lang_ids |= lang
         self.backend.bind_all_category()
         categ = self.env.ref("product.product_category_1")
         self.assertEqual(len(categ.shopinvader_bind_ids), 2)
         shopinvader_categ = categ.shopinvader_bind_ids[0]
-        self.assertEqual(len(shopinvader_categ.shopinvader_child_ids), 3)
+        self.assertEqual(len(shopinvader_categ.shopinvader_child_ids), 6)
         for binding in categ.shopinvader_bind_ids:
             self.assertEqual(
                 binding.shopinvader_parent_id.lang_id, binding.lang_id
@@ -285,22 +285,24 @@ class ProductCase(ProductCommonCase):
         product = self.env.ref("product.product_product_4")
         self.assertEqual(len(product.shopinvader_bind_ids), 1)
         shopinvader_product = product.shopinvader_bind_ids
-        self.assertEqual(len(shopinvader_product.shopinvader_categ_ids), 3)
+        self.assertEqual(len(shopinvader_product.shopinvader_categ_ids), 2)
 
     def test_product_category_with_two_lang(self):
-        lang = self.install_lang("base.lang_fr")
+        lang = self.install_lang("fr_FR")
         self.backend.lang_ids |= lang
         self.backend.bind_all_category()
         self.backend.bind_all_product()
         product = self.env.ref("product.product_product_4")
         self.assertEqual(len(product.shopinvader_bind_ids), 2)
         shopinvader_product = product.shopinvader_bind_ids[0]
-        self.assertEqual(len(shopinvader_product.shopinvader_categ_ids), 3)
+        self.assertEqual(len(shopinvader_product.shopinvader_categ_ids), 2)
         for binding in product.shopinvader_bind_ids:
             if binding.lang_id.code == "fr_FR":
-                self.assertEqual(binding.url_key, u"ipad-avec-ecran-retina")
+                self.assertEqual(
+                    binding.url_key, u"ipad-avec-ecran-retina-a2323"
+                )
             elif binding.lang_id.code == "en_US":
-                self.assertEqual(binding.url_key, u"ipad-retina-display")
+                self.assertEqual(binding.url_key, u"ipad-retina-display-a2323")
 
     def test_create_product_binding1(self):
         """
@@ -347,7 +349,7 @@ class ProductCase(ProductCommonCase):
         product_tmpl_obj = self.env["product.template"].with_context(
             active_test=False
         )
-        lang = self.env["res.lang"]._lang_get(self.env.user.lang)
+        lang = self.env["res.lang"].search([])[0]
         product_values = {
             "name": "Shopinvader t-shirt",
             "shopinvader_bind_ids": [
@@ -389,7 +391,7 @@ class ProductCase(ProductCommonCase):
         product_tmpl_obj = self.env["product.template"].with_context(
             active_test=False
         )
-        lang = self.env["res.lang"]._lang_get(self.env.user.lang)
+        lang = self.env["res.lang"].search([])[0]
         product_values = {
             "name": "Shopinvader t-shirt",
             "shopinvader_bind_ids": [
@@ -435,7 +437,7 @@ class ProductCase(ProductCommonCase):
         product_tmpl_obj = self.env["product.template"].with_context(
             active_test=False
         )
-        lang = self.env["res.lang"]._lang_get(self.env.user.lang)
+        lang = self.env["res.lang"].search([])[0]
         product_values = {
             "name": "Shopinvader t-shirt",
             "shopinvader_bind_ids": [
@@ -485,7 +487,7 @@ class ProductCase(ProductCommonCase):
         self.user.write(
             {
                 "groups_id": [
-                    (4, self.env.ref("sales_team.group_sale_manager").id),
+                    (4, self.env.ref("base.group_sale_manager").id),
                     (
                         4,
                         self.env.ref(
@@ -565,7 +567,7 @@ class ProductCase(ProductCommonCase):
             while parent and parent.active:
                 level += 1
                 parent = parent.shopinvader_parent_id
-            self.assertEquals(shopinv_categ.level, level)
+            self.assertEqual(shopinv_categ.level, level)
         return True
 
     def test_product_category_auto_bind(self):
@@ -574,10 +576,15 @@ class ProductCase(ProductCommonCase):
         too (depending on the configuration).
         :return:
         """
-        product = self.env.ref("product.product_product_4").copy()
+        product = self.env.ref("product.product_product_4").copy(
+            default={"default_code": "TEST"}
+        )
         # To avoid others products to be binded
         self.env["product.template"].search(
-            [("sale_ok", "=", True), ("id", "not in", product.ids)]
+            [
+                ("sale_ok", "=", True),
+                ("id", "not in", product.mapped("product_tmpl_id").ids),
+            ]
         ).write({"sale_ok": False})
         product.write({"sale_ok": True})
         categ_obj = self.env["product.category"]
@@ -598,7 +605,7 @@ class ProductCase(ProductCommonCase):
         )
         self.backend.write({"category_binding_level": 0})
         self.backend.bind_all_product()
-        self.assertEquals(existing_binded_categs, shopinv_categ_obj.search([]))
+        self.assertEqual(existing_binded_categs, shopinv_categ_obj.search([]))
         # New categories shouldn't be binded due to binded level set to 0
         self.assertFalse(
             shopinv_categ_obj.search([("record_id", "in", categs.ids)])
@@ -617,7 +624,7 @@ class ProductCase(ProductCommonCase):
         )
         self._check_category_level(existing_binded_categs)
         # Ensure no others categories are binded
-        self.assertEquals(existing_binded_categs, shopinv_categ_obj.search([]))
+        self.assertEqual(existing_binded_categs, shopinv_categ_obj.search([]))
         # categ_child and categ_parent should be binded but not the categ
         # grand_parent due to binding_level defined on 2
         binded_categs = shopinv_categ_obj.search(
@@ -634,7 +641,9 @@ class ProductCase(ProductCommonCase):
         :return:
         """
         wizard_obj = self.env["shopinvader.variant.binding.wizard"]
-        product = self.env.ref("product.product_product_4").copy()
+        product = self.env.ref("product.product_product_4").copy(
+            default={"default_code": "TEST"}
+        )
         wizard_values = {
             "backend_id": self.backend.id,
             "product_ids": [(6, False, product.ids)],
@@ -658,7 +667,7 @@ class ProductCase(ProductCommonCase):
         )
         self.backend.write({"category_binding_level": 0})
         wizard.bind_products()
-        self.assertEquals(existing_binded_categs, shopinv_categ_obj.search([]))
+        self.assertEqual(existing_binded_categs, shopinv_categ_obj.search([]))
         # New categories shouldn't be binded due to binded level set to 0
         self.assertFalse(
             shopinv_categ_obj.search([("record_id", "in", categs.ids)])
@@ -675,7 +684,7 @@ class ProductCase(ProductCommonCase):
         )
         self._check_category_level(existing_binded_categs)
         # Ensure no others categories are binded
-        self.assertEquals(existing_binded_categs, shopinv_categ_obj.search([]))
+        self.assertEqual(existing_binded_categs, shopinv_categ_obj.search([]))
         # categ_child and categ_parent should be binded but not the categ
         # grand_parent due to binding_level defined on 2
         binded_categs = shopinv_categ_obj.search(
@@ -847,7 +856,7 @@ class ProductCase(ProductCommonCase):
         if category:
             for url in shopinv_product.url_url_ids:
                 self.assertTrue(url.redirect)
-                self.assertEquals(url.model_id, category)
+                self.assertEqual(url.model_id, category)
         return True
 
     def test_unbind_variant(self):
@@ -861,7 +870,7 @@ class ProductCase(ProductCommonCase):
         shopinv_product = self.shopinvader_variants.mapped(
             "shopinvader_product_id"
         )
-        self.assertEquals(len(shopinv_product), 1)
+        self.assertEqual(len(shopinv_product), 1)
         self.assertGreaterEqual(len(self.shopinvader_variants), 1)
         # Init: every variants and shopinv product are active True
         self.shopinvader_variants.write({"active": True})

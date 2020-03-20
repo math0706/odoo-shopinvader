@@ -5,9 +5,9 @@
 
 import logging
 
-from odoo.addons.base_rest.controllers import main
-from odoo.exceptions import MissingError
-from odoo.http import request, route
+from openerp.addons.base_rest.controllers import main
+from openerp.exceptions import MissingError
+from openerp.http import request, route
 
 _logger = logging.getLogger(__name__)
 

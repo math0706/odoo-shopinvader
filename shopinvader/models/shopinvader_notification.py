@@ -3,9 +3,9 @@
 # @author Sébastien BEAU <sebastien.beau@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
-from odoo.addons.queue_job.job import DEFAULT_PRIORITY, job
-from odoo.tools.translate import _
+from openerp import api, fields, models
+from openerp.addons.queue_job.job import DEFAULT_PRIORITY, job
+from openerp.tools.translate import _
 
 
 class ShopinvaderNotification(models.Model):
@@ -58,7 +58,7 @@ class ShopinvaderNotification(models.Model):
     )
     model_id = fields.Many2one("ir.model", "Model", required=True)
     template_id = fields.Many2one(
-        "mail.template", "Mail Template", required=True
+        "email.template", "Mail Template", required=True
     )
     queue_job_priority = fields.Integer(
         string="Priority",

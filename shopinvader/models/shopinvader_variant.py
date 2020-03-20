@@ -4,8 +4,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 from contextlib import contextmanager
 
-from odoo import api, fields, models
-from odoo.tools import float_compare, float_round
+from openerp import api, fields, models
+from openerp.tools import float_compare, float_round
 
 from .tools import sanitize_attr_name
 
@@ -157,35 +157,39 @@ class ShopinvaderVariant(models.Model):
             lambda r: not company or r.company_id == company
         )
         # get the expeced tax to apply from the fiscal position
-        tax_id = fposition.map_tax(taxes, product_id) if fposition else taxes
+        tax_id = fposition.map_tax(taxes) if fposition else taxes
         tax_id = tax_id and tax_id[0]
         product = product_id.with_context(
             quantity=qty, pricelist=pricelist.id, fiscal_position=fposition
         )
-        final_price, rule_id = pricelist.get_product_price_rule(
-            product, qty or 1.0, None
-        )
+        res = pricelist.with_context(
+            quantity=qty, pricelist=pricelist.id, fiscal_position=fposition
+        ).price_rule_get(product.id, qty or 1.0, None)
+        final_price, rule_id = res[pricelist.id]
         tax_included = tax_id.price_include
         account_tax_obj = self.env["account.tax"]
         # fix tax on the price
         value = account_tax_obj._fix_tax_included_price_company(
             final_price, product.taxes_id, tax_id, company
         )
+        value = pricelist.currency_id.round(value)
         res = {
             "value": value,
             "tax_included": tax_included,
             "original_value": value,
             "discount": 0.0,
         }
-        if pricelist.discount_policy == "without_discount":
+        if pricelist.visible_discount:
             sol = self.env["sale.order.line"]
             new_list_price, currency_id = sol._get_real_price_currency(
                 product, rule_id, qty or 1.0, product.uom_id, pricelist.id
             )
+
             # fix tax on the real price
             new_list_price = account_tax_obj._fix_tax_included_price_company(
                 new_list_price, product.taxes_id, tax_id, company
             )
+            new_list_price = pricelist.currency_id.round(new_list_price)
             product_precision = self.env["decimal.precision"].precision_get(
                 "Product Price"
             )
@@ -200,10 +204,10 @@ class ShopinvaderVariant(models.Model):
                 return res
             discount = (new_list_price - value) / new_list_price * 100
             # apply the right precision on discount
-            dicount_precision = self.env["decimal.precision"].precision_get(
+            discount_precision = self.env["decimal.precision"].precision_get(
                 "Discount"
             )
-            discount = float_round(discount, dicount_precision)
+            discount = float_round(discount, discount_precision)
             res.update(
                 {"original_value": new_list_price, "discount": discount}
             )

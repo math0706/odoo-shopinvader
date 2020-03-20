@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright 2019 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-from odoo import exceptions
+from openerp import exceptions
 
 from .common import CommonCase
 
@@ -55,7 +55,7 @@ class TestShopinvaderPartnerBinding(CommonCase):
         wizard.binding_lines.write({"bind": False})
         with self.assertRaises(exceptions.UserError) as e:
             wizard.action_apply()
-        self.assertIn("unbind is not implemented", e.exception.name)
+        self.assertIn("unbind is not implemented", e.exception.message)
         shopinv_partner = self._get_shopinvader_partner(
             self.partner, self.backend
         )
@@ -104,4 +104,4 @@ class TestShopinvaderPartnerBinding(CommonCase):
         )
         # Ensure the binding is done
         self.assertTrue(shopinv_partner)
-        self.assertEquals(shopinv_partner.email, lower_email)
+        self.assertEqual(shopinv_partner.email, lower_email)

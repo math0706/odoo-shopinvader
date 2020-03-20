@@ -3,8 +3,8 @@
 # Copyright 2018 ACSONE SA/NV (<http://acsone.eu>)
 # @author Sébastien BEAU <sebastien.beau@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-from odoo.addons.component.core import Component
-from odoo.addons.component_event import skip_if
+from openerp.addons.component.core import Component
+from openerp.addons.component_event import skip_if
 
 
 class ProductProductEventListener(Component):

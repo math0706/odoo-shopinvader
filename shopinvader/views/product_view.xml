@@ -58,21 +58,23 @@
         <field name="inherit_id" ref="product.product_normal_form_view"/>
         <field name="priority" eval="90"/>
         <field name="arch" type="xml">
-            <field name="shopinvader_bind_ids" position="before">
-                <group>
+            <xpath expr="/form/sheet/notebook" position="inside">
+                <page name="shopinvader" string="ShopInvader">
                     <group>
-                        <field name="is_shopinvader_binded"/>
+                        <group>
+                            <field name="is_shopinvader_binded"/>
+                        </group>
                     </group>
-                    <group></group>
-                </group>
-            </field>
+                    <field name="shopinvader_bind_ids"/>
+                </page>
+            </xpath>
         </field>
     </record>
 
     <menuitem
             id="menu_product_filter_action"
             action="product_filter_action"
-            parent="sale.prod_config_main"
+            parent="product.prod_config_main"
             sequence="15"/>
 
 </odoo>

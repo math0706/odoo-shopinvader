@@ -3,8 +3,8 @@
 # @author Sébastien BEAU <sebastien.beau@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
-from odoo.addons.base_url.models.abstract_url import get_model_ref
+from openerp import api, fields, models
+from openerp.addons.base_url.models.abstract_url import get_model_ref
 
 
 class ShopinvaderCategory(models.Model):

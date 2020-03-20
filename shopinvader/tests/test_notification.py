@@ -18,7 +18,9 @@ class CommonNotificationCase(CommonCase):
                 ("notification_type", "=", notif_type),
             ]
         )
-        vals = notif.template_id.generate_email(record.id)
+        vals = self.env["email.template"].generate_email(
+            notif.template_id.id, record.id
+        )
         message = self.env["mail.message"].search(
             [
                 ("subject", "=", vals["subject"]),
@@ -47,7 +49,7 @@ class CommonNotificationCase(CommonCase):
             priority = notification.queue_job_priority
         else:
             priority = force_priority
-        self.assertEquals(priority, job.priority)
+        self.assertEqual(priority, job.priority)
         return True
 
 
@@ -67,7 +69,7 @@ class NotificationCartCase(CommonNotificationCase):
         )
         self.cart.action_confirm_cart()
         self._init_job_counter()
-        self.cart.action_confirm()
+        self.cart.action_button_confirm()
         self._check_nbr_job_created(1)
         self._check_job_priority(
             self.created_jobs, "sale_confirmation", force_priority=priority
@@ -77,12 +79,12 @@ class NotificationCartCase(CommonNotificationCase):
 
     def test_invoice_notification(self):
         self.cart.action_confirm_cart()
-        self.cart.action_confirm()
+        self.cart.action_button_confirm()
         for line in self.cart.order_line:
             line.qty_delivered = line.product_uom_qty
         self.cart.action_invoice_create()
         self._init_job_counter()
-        self.cart.invoice_ids.action_invoice_open()
+        self.cart.invoice_ids.signal_workflow("invoice_open")
         self._check_nbr_job_created(1)
         self._check_job_priority(self.created_jobs, "invoice_open")
         self._perform_created_job()

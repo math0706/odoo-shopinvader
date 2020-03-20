@@ -3,9 +3,9 @@
 # @author Sébastien BEAU <sebastien.beau@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import _, api, fields, models, tools
-from odoo.addons.server_environment import serv_config
-from odoo.http import request
+from openerp import _, api, fields, models, tools
+from openerp.addons.server_environment import serv_config
+from openerp.http import request
 
 
 class ShopinvaderBackend(models.Model):
@@ -159,9 +159,12 @@ class ShopinvaderBackend(models.Model):
     def _compute_nbr_content(self):
         to_count = self._to_compute_nbr_content()
         domain = [("backend_id", "in", self.ids)]
-        for odoo_field, odoo_model in to_count.items():
-            if odoo_model in self.env and self.env[odoo_model]._table_exist():
-                target_model_obj = self.env[odoo_model]
+        for openerp_field, openerp_model in to_count.items():
+            if (
+                openerp_model in self.env
+                and self.env[openerp_model]._table_exist()
+            ):
+                target_model_obj = self.env[openerp_model]
                 result = target_model_obj.read_group(
                     domain, ["backend_id"], ["backend_id"], lazy=False
                 )
@@ -169,7 +172,7 @@ class ShopinvaderBackend(models.Model):
                     data["backend_id"][0]: data["__count"] for data in result
                 }
                 for record in self:
-                    record[odoo_field] = result.get(record.id, 0)
+                    record[openerp_field] = result.get(record.id, 0)
 
     def _bind_all_content(self, model, bind_model, domain):
         bind_model_obj = self.env[bind_model].with_context(active_test=False)
@@ -185,13 +188,12 @@ class ShopinvaderBackend(models.Model):
         for backend in self:
             for lang in backend.lang_ids:
                 for record in records:
-                    bind = fields.first(
-                        binds.filtered(
-                            lambda b: b.backend_id == backend
-                            and b.record_id == record
-                            and b.lang_id == lang
-                        )
+                    bind = binds.filtered(
+                        lambda b: b.backend_id == backend
+                        and b.record_id == record
+                        and b.lang_id == lang
                     )
+                    bind = bind and bind[0] or False
                     if not bind:
                         bind_model_obj.with_context(map_children=True).create(
                             {
