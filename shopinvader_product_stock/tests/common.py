@@ -3,11 +3,11 @@
 # @author Sébastien BEAU <sebastien.beau@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo.addons.connector_search_engine.tests.test_all import (
+from openerp.addons.connector_search_engine.tests.test_all import (
     TestBindingIndexBaseFake,
 )
-from odoo.addons.queue_job.tests.common import JobMixin
-from odoo.addons.server_environment import serv_config
+from openerp.addons.queue_job.tests.common import JobMixin
+from openerp.addons.server_environment import serv_config
 
 
 class StockCommonCase(TestBindingIndexBaseFake, JobMixin):

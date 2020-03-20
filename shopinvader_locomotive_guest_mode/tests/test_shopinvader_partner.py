@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright 2019 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-from odoo.addons.shopinvader_locomotive.tests.test_shopinvader_partner import (
+from openerp.addons.shopinvader_locomotive.tests.test_shopinvader_partner import (
     CommonShopinvaderPartner,
 )
 
@@ -26,7 +26,7 @@ class TestShopinvaderPartnerGuest(CommonShopinvaderPartner):
                 "is_guest": True,
             }
         )
-        # The creation of a shopinvader partner into odoo must trigger
+        # The creation of a shopinvader partner into openerp must trigger
         # the creation of a user account into locomotive
         self._check_nbr_job_created(0)
         return shopinvader_partner

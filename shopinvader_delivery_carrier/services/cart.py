@@ -4,10 +4,10 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 import logging
 
-from odoo.addons.base_rest.components.service import to_int
-from odoo.addons.component.core import Component
-from odoo.exceptions import UserError
-from odoo.tools.translate import _
+from openerp.addons.base_rest.components.service import to_int
+from openerp.addons.component.core import Component
+from openerp.exceptions import UserError
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 

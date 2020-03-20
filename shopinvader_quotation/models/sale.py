@@ -3,9 +3,9 @@
 # Benoît GUILLOT <benoit.guillot@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
-from odoo.exceptions import UserError
-from odoo.tools.translate import _
+from openerp import api, fields, models
+from openerp.exceptions import UserError
+from openerp.tools.translate import _
 
 
 class SaleOrder(models.Model):

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Copyright 2019 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-from odoo import fields
-from odoo.addons.shopinvader.tests.common import CommonCase
+from openerp import fields
+from openerp.addons.shopinvader.tests.common import CommonCase
 
 
 class TestInvoiceService(CommonCase):
@@ -54,27 +54,27 @@ class TestInvoiceService(CommonCase):
         """
         # To have them into correct order
         invoices = invoices.search(self.service._get_base_search_domain())
-        self.assertEquals(len(data), len(invoices))
+        self.assertEqual(len(data), len(invoices))
         for current_data, invoice in zip(data, invoices):
             state_label = self._get_selection_label(invoice, "state")
             type_label = self._get_selection_label(invoice, "type")
-            self.assertEquals(current_data.get("invoice_id"), invoice.id)
-            self.assertEquals(current_data.get("number"), invoice.number)
-            self.assertEquals(
+            self.assertEqual(current_data.get("invoice_id"), invoice.id)
+            self.assertEqual(current_data.get("number"), invoice.number)
+            self.assertEqual(
                 current_data.get("date_invoice"), invoice.date_invoice
             )
-            self.assertEquals(current_data.get("state"), state_label)
-            self.assertEquals(current_data.get("type"), type_label)
-            self.assertEquals(
+            self.assertEqual(current_data.get("state"), state_label)
+            self.assertEqual(current_data.get("type"), type_label)
+            self.assertEqual(
                 current_data.get("amount_total"), invoice.amount_total
             )
-            self.assertEquals(
+            self.assertEqual(
                 current_data.get("amount_tax"), invoice.amount_tax
             )
-            self.assertEquals(
+            self.assertEqual(
                 current_data.get("amount_untaxed"), invoice.amount_untaxed
             )
-            self.assertEquals(current_data.get("amount_due"), invoice.residual)
+            self.assertEqual(current_data.get("amount_due"), invoice.residual)
         return True
 
     def _confirm_and_invoice_sale(self, sale, payment=True):
@@ -90,7 +90,7 @@ class TestInvoiceService(CommonCase):
             line.write({"qty_delivered": line.product_uom_qty})
         invoice_id = sale.action_invoice_create()
         invoice = self.env["account.invoice"].browse(invoice_id)
-        invoice.action_invoice_open()
+        invoice.signal_workflow("invoice_open")
         invoice.action_move_create()
         if payment:
             self._make_payment(invoice)
@@ -134,7 +134,7 @@ class TestInvoiceService(CommonCase):
         self.assertFalse(data)
         # Then create a invoice related to partner
         invoice = self._confirm_and_invoice_sale(self.sale, payment=False)
-        self.assertEquals(invoice.partner_id, self.service.partner)
+        self.assertEqual(invoice.partner_id, self.service.partner)
         result = self.service.dispatch("search")
         data = result.get("data", [])
         self._check_data_content(data, invoice)
@@ -159,10 +159,10 @@ class TestInvoiceService(CommonCase):
         invoice3 = self._confirm_and_invoice_sale(sale3)
         invoice4 = self._confirm_and_invoice_sale(sale4)
         invoices = invoice1 | invoice2 | invoice3 | invoice4
-        self.assertEquals(invoice1.partner_id, self.service.partner)
-        self.assertEquals(invoice2.partner_id, self.service.partner)
-        self.assertEquals(invoice3.partner_id, self.service.partner)
-        self.assertEquals(invoice4.partner_id, self.service.partner)
+        self.assertEqual(invoice1.partner_id, self.service.partner)
+        self.assertEqual(invoice2.partner_id, self.service.partner)
+        self.assertEqual(invoice3.partner_id, self.service.partner)
+        self.assertEqual(invoice4.partner_id, self.service.partner)
         result = self.service.dispatch("search")
         data = result.get("data", [])
         self._check_data_content(data, invoices)

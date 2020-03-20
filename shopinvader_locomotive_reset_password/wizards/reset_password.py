@@ -5,7 +5,7 @@
 
 from datetime import datetime, timedelta
 
-from odoo import api, fields, models
+from openerp import api, fields, models
 
 
 class ShopinvaderResetPassword(models.TransientModel):
@@ -24,7 +24,7 @@ class ShopinvaderResetPassword(models.TransientModel):
         required=True,
     )
     template_id = fields.Many2one(
-        "mail.template",
+        "email.template"),
         "Mail Template",
         required=True,
         domain=[("model_id", "=", "shopinvader.partner")],

@@ -4,8 +4,8 @@
 from datetime import timedelta
 
 import mock
-from odoo import fields
-from odoo.addons.shopinvader.tests.common import CommonCase
+from openerp import fields
+from openerp.addons.shopinvader.tests.common import CommonCase
 
 
 class TestCartExpiry(CommonCase):
@@ -39,7 +39,7 @@ class TestCartExpiry(CommonCase):
         self.backend.write(
             {"cart_expiry_delay": 1, "cart_expiry_policy": "cancel"}
         )
-        now_method = "odoo.fields.Datetime.now"
+        now_method = "openerp.fields.Datetime.now"
         with mock.patch(now_method) as mock_now:
             mock_now.return_value = today
             self.backend.manage_cart_expiry()
@@ -57,7 +57,7 @@ class TestCartExpiry(CommonCase):
         self.backend.write(
             {"cart_expiry_delay": 1, "cart_expiry_policy": "delete"}
         )
-        now_method = "odoo.fields.Datetime.now"
+        now_method = "openerp.fields.Datetime.now"
         with mock.patch(now_method) as mock_now:
             mock_now.return_value = today
             self.backend.manage_cart_expiry()

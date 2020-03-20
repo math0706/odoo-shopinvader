@@ -4,10 +4,10 @@
 
 import json
 
-from odoo.addons.connector_elasticsearch.components.adapter import (
+from openerp.addons.connector_elasticsearch.components.adapter import (
     ElasticsearchAdapter,
 )
-from odoo.addons.connector_search_engine.tests.test_all import (
+from openerp.addons.connector_search_engine.tests.test_all import (
     TestBindingIndexBase,
 )
 from vcr_unittest import VCRMixin

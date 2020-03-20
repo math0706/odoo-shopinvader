@@ -3,8 +3,8 @@
 # Copyright 2018 ACSONE SA/NV (<http://acsone.eu>)
 # @author Sébastien BEAU <sebastien.beau@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-from odoo import _, api, exceptions, fields, models
-from odoo.fields import first
+from openerp import _, api, exceptions, fields, models
+from openerp.fields import first
 
 
 class ShopinvaderPartner(models.Model):
@@ -44,7 +44,6 @@ class ShopinvaderPartner(models.Model):
         backend_ids = (
             self.mapped("backend_id")
             .filtered(lambda b: b.use_sale_profile)
-            .with_prefetch(self._prefetch)
             .ids
         )
         partners = self.mapped("record_id")
@@ -79,7 +78,6 @@ class ShopinvaderPartner(models.Model):
                 # update values manually (because we have 2 caches;
                 # due to with_context())
                 record = self.filtered(lambda p, b=binding: p.id == b.id)
-                record = record.with_prefetch(self._prefetch)
                 record.sale_profile_id = sale_profile
 
     @api.multi
@@ -108,13 +106,13 @@ class ShopinvaderPartner(models.Model):
                 and p.pricelist_id.id == pl.id
                 and p.backend_id.id == b.id
             )
-            sale_profile = first(sale_profile.with_prefetch(self._prefetch))
+            sale_profile = first(sale_profile)
         if not sale_profile:
             # Get the default sale profile
             sale_profile = default_sale_profiles.filtered(
                 lambda p, b=backend: p.backend_id.id == b.id
             )
-            sale_profile = first(sale_profile.with_prefetch(self._prefetch))
+            sale_profile = first(sale_profile)
             if not sale_profile:
                 message = (
                     _("No default sale profile found for the backend" " %s")

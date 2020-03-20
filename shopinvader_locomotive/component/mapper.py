@@ -5,8 +5,8 @@
 
 import json
 
-from odoo.addons.component.core import AbstractComponent, Component
-from odoo.addons.connector.components.mapper import changed_by, mapping
+from openerp.addons.component.core import AbstractComponent, Component
+from openerp.addons.connector.components.mapper import changed_by, mapping
 
 
 class LocomotiveExportMapper(AbstractComponent):

@@ -4,8 +4,10 @@
 
 import json
 
-from odoo.addons.shopinvader_locomotive.tests.common import LocoCommonCase
-from odoo.addons.shopinvader_locomotive.tests.test_backend import mock_site_api
+from openerp.addons.shopinvader_locomotive.tests.common import LocoCommonCase
+from openerp.addons.shopinvader_locomotive.tests.test_backend import (
+    mock_site_api,
+)
 
 
 class TestBackend(LocoCommonCase):

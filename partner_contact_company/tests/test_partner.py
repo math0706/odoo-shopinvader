@@ -2,7 +2,7 @@
 # Copyright 2017 Akretion (http://www.akretion.com).
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
-from odoo.tests import common
+from openerp.tests import common
 
 
 class TestPartnerName(common.TransactionCase):

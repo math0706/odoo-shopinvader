@@ -5,7 +5,7 @@
 
 from datetime import datetime
 
-from odoo.addons.component.core import Component
+from openerp.addons.component.core import Component
 
 
 class Customer(Component):

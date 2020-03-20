@@ -4,8 +4,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
-from odoo import fields, models
-from odoo.addons.shopinvader.models.tools import sanitize_attr_name
+from openerp import fields, models
+from openerp.addons.shopinvader.models.tools import sanitize_attr_name
 
 
 class ProductFilter(models.Model):

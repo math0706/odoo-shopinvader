@@ -6,8 +6,8 @@
 import json
 import os
 
-from odoo.addons.connector_algolia.components.adapter import AlgoliaAdapter
-from odoo.addons.connector_search_engine.tests.test_all import (
+from openerp.addons.connector_algolia.components.adapter import AlgoliaAdapter
+from openerp.addons.connector_search_engine.tests.test_all import (
     TestBindingIndexBase,
 )
 from vcr_unittest import VCRMixin

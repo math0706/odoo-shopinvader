@@ -6,8 +6,8 @@ from datetime import timedelta
 from functools import wraps
 
 import psycopg2
-from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from openerp import _, api, fields, models
+from openerp.exceptions import ValidationError
 
 
 def wrap_integrity_error(method):

@@ -3,8 +3,8 @@
 # Benoît GUILLOT <benoit.guillot@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo.addons.base_rest.components.service import to_int
-from odoo.addons.component.core import Component
+from openerp.addons.base_rest.components.service import to_int
+from openerp.addons.component.core import Component
 
 
 class QuotationService(Component):

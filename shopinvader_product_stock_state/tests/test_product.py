@@ -3,7 +3,9 @@
 # Sébastien BEAU <sebastien.beau@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo.addons.shopinvader_product_stock.tests.common import StockCommonCase
+from openerp.addons.shopinvader_product_stock.tests.common import (
+    StockCommonCase,
+)
 
 
 class TestProductProduct(StockCommonCase):

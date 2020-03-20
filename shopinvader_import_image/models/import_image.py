@@ -30,7 +30,7 @@ from zipfile import ZipFile
 
 import StringIO
 import urllib2
-from odoo import _, api, exceptions, fields, models
+from openerp import _, api, exceptions, fields, models
 
 _logger = logging.getLogger(__name__)
 

@@ -4,9 +4,9 @@
 
 from datetime import timedelta
 
-from odoo import fields
-from odoo.addons.component.tests.common import SavepointComponentCase
-from odoo.exceptions import ValidationError
+from openerp import fields
+from openerp.addons.component.tests.common import SavepointComponentCase
+from openerp.exceptions import ValidationError
 
 
 class TestShopinvaderPartner(SavepointComponentCase):

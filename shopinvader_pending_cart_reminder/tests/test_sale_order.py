@@ -3,8 +3,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 from datetime import timedelta
 
-from odoo import api, fields
-from odoo.addons.shopinvader.tests.test_notification import CommonCase
+from openerp import api, fields
+from openerp.addons.shopinvader.tests.test_notification import CommonCase
 
 
 class TestSaleOrder(CommonCase):
@@ -120,7 +120,7 @@ class TestSaleOrder(CommonCase):
         self.sale.write({"pending_cart_reminder_sent_dt": now})
         self._patch_sale_reminder()
         self.sale_obj.launch_pending_cart_reminder()
-        self.assertEquals(self.sale.pending_cart_reminder_sent_dt, now)
+        self.assertEqual(self.sale.pending_cart_reminder_sent_dt, now)
         return
 
     def test_reminder4(self):

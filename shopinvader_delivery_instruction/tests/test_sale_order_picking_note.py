@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 from uuid import uuid4
 
-from odoo.addons.shopinvader.tests.common import CommonCase
+from openerp.addons.shopinvader.tests.common import CommonCase
 
 
 class TestSaleOrderDeliveryNote(CommonCase):
@@ -41,16 +41,16 @@ class TestSaleOrderDeliveryNote(CommonCase):
         for delivery_instruction in delivery_instructions:
             params = {"delivery_instruction": delivery_instruction}
             self.service.dispatch("update", params=params)
-            self.assertEquals(self.cart.picking_note, delivery_instruction)
+            self.assertEqual(self.cart.picking_note, delivery_instruction)
         result = self.service.dispatch("update")
         data = result.get("data", {})
-        self.assertEquals(
+        self.assertEqual(
             data.get("delivery_instruction"), delivery_instruction
         )
-        self.cart.action_confirm()
+        self.cart.action_button_confirm()
         pickings = self.cart.picking_ids
         self.assertTrue(pickings)
         for picking in pickings:
             # Should be equals to the last delivery_instruction set on the cart
-            self.assertEquals(picking.note, delivery_instruction)
+            self.assertEqual(picking.note, delivery_instruction)
         return

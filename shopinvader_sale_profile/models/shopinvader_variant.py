@@ -3,8 +3,8 @@
 # Copyright 2018 ACSONE SA/NV (<http://acsone.eu>)
 # @author Sébastien BEAU <sebastien.beau@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-from odoo import models
-from odoo.fields import first
+from openerp import models
+from openerp.fields import first
 
 
 class ShopinvaderVariant(models.Model):

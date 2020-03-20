@@ -5,8 +5,8 @@
 
 import logging
 
-from odoo import fields
-from odoo.exceptions import AccessError
+from openerp import fields
+from openerp.exceptions import AccessError
 
 from .common import LocoCommonCase
 
@@ -38,7 +38,7 @@ class CommonShopinvaderPartner(LocoCommonCase):
         shopinvader_partner = self.env["shopinvader.partner"].create(
             {"record_id": partner.id, "backend_id": self.backend.id}
         )
-        # The creation of a shopinvader partner into odoo must trigger
+        # The creation of a shopinvader partner into openerp must trigger
         # the creation of a user account into locomotive
         self._check_nbr_job_created(1)
         with requests_mock.mock() as m:
@@ -54,7 +54,7 @@ class CommonShopinvaderPartner(LocoCommonCase):
 
 
 class TestShopinvaderPartner(CommonShopinvaderPartner):
-    def test_create_shopinvader_partner_from_odoo(self):
+    def test_create_shopinvader_partner_from_openerp(self):
         shop_partner, params = self._create_shopinvader_partner(
             self.data, u"5a953d6aae1c744cfcfb3cd3"
         )
@@ -70,13 +70,13 @@ class TestShopinvaderPartner(CommonShopinvaderPartner):
         )
         self.assertEqual(shop_partner.external_id, u"5a953d6aae1c744cfcfb3cd3")
 
-    def test_delete_shopinvader_partner_from_odoo(self):
+    def test_delete_shopinvader_partner_from_openerp(self):
         shop_partner, params = self._create_shopinvader_partner(
             self.data, u"5a953d6aae1c744cfcfb3cd3"
         )
         self._init_job_counter()
         shop_partner.unlink()
-        # The deletion of a shopinvader into odoo must trigger the deletion
+        # The deletion of a shopinvader into openerp must trigger the deletion
         # of a user account into locomotive
         self._check_nbr_job_created(1)
         with requests_mock.mock() as m:
@@ -90,7 +90,7 @@ class TestShopinvaderPartner(CommonShopinvaderPartner):
             )
             self._perform_created_job()
 
-    def test_update_shopinvader_partner_from_odoo(self):
+    def test_update_shopinvader_partner_from_openerp(self):
         shop_partner, params = self._create_shopinvader_partner(
             self.data, u"5a953d6aae1c744cfcfb3cd3"
         )
@@ -100,7 +100,7 @@ class TestShopinvaderPartner(CommonShopinvaderPartner):
         # As we updated a field to export, a job should be created
         self._check_nbr_job_created(1)
 
-    def test_no_update_shopinvader_partner_from_odoo(self):
+    def test_no_update_shopinvader_partner_from_openerp(self):
         shop_partner, params = self._create_shopinvader_partner(
             self.data, u"5a953d6aae1c744cfcfb3cd3"
         )

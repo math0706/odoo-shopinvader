@@ -6,7 +6,7 @@
 
 from collections import defaultdict
 
-from odoo import fields, models
+from openerp import fields, models
 
 
 class ShopinvaderVariant(models.Model):

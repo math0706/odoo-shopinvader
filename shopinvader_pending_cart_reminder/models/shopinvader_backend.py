@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright 2019 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-from odoo import _, api, exceptions, fields, models
+from openerp import _, api, exceptions, fields, models
 
 
 class ShopinvaderBackend(models.Model):
@@ -18,7 +18,7 @@ class ShopinvaderBackend(models.Model):
         )
         mail_template = self.env.ref(xml_id, raise_if_not_found=False)
         if not mail_template:
-            mail_template = self.env["mail.template"].browse()
+            mail_template = self.env["email.template")].browse()
         return mail_template
 
     pending_cart_reminder_delay = fields.Integer(
@@ -29,7 +29,7 @@ class ShopinvaderBackend(models.Model):
         default=0,
     )
     pending_cart_reminder_template_id = fields.Many2one(
-        comodel_name="mail.template",
+        comodel_name="email.template"),
         string="Quotation reminder e-mail template",
         domain="[('model_id', '=', 'sale.order')]",
         default=lambda x: x._get_default_quotation_reminder_mail_template_id(),

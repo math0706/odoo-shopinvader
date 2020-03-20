@@ -33,7 +33,7 @@
             <field name="target">new</field>
         </record>
 
-    <menuitem name="Import product images" id="menu_import_product_image"  parent="sales_team.menu_sales"
+    <menuitem name="Import product images" id="menu_import_product_image"  parent="base.menu_sales"
               action="import_image_action_form" sequence="22"/>
     </data>
 </odoo>

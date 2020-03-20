@@ -2,7 +2,7 @@
 # Copyright 2019 Akretion (http://www.akretion.com).
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo.addons.shopinvader.tests.test_notification import (
+from openerp.addons.shopinvader.tests.test_notification import (
     CommonNotificationCase,
 )
 
@@ -10,7 +10,7 @@ from odoo.addons.shopinvader.tests.test_notification import (
 class NotificationPickingCase(CommonNotificationCase):
     def setUp(self):
         super(NotificationPickingCase, self).setUp()
-        self.cart.action_confirm()
+        self.cart.action_button_confirm()
         self.picking = self.cart.picking_ids
 
     def test_picking_notification1(self):

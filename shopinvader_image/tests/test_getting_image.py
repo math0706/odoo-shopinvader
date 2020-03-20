@@ -4,8 +4,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
-from odoo.addons.shopinvader.tests.common import ProductCommonCase
-from odoo.addons.storage_image_product.tests.common import (
+from openerp.addons.shopinvader.tests.common import ProductCommonCase
+from openerp.addons.storage_image_product.tests.common import (
     ProductImageCommonCase,
 )
 
@@ -56,6 +56,6 @@ class ShopinvaderImageCase(ProductCommonCase, ProductImageCommonCase):
 
         # check url key of image that shoul match product name slugified
         for image in self.shopinvader_variant.image_ids.mapped("image_id"):
-            # skip the two first thumbnail as there are odoo thumbnail
+            # skip the two first thumbnail as there are openerp thumbnail
             for thumbnail in image.thumbnail_ids[2:]:
                 self.assertEqual(thumbnail.url_key, "ipad-retina-display")

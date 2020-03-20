@@ -3,8 +3,8 @@
 # @author Sébastien BEAU <sebastien.beau@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import _
-from odoo.addons.component.core import Component
+from openerp import _
+from openerp.addons.component.core import Component
 
 
 class LocomotiveDeleter(Component):

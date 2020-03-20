@@ -5,8 +5,8 @@
 
 import uuid
 
-from odoo import fields, models
-from odoo.addons.queue_job.job import job
+from openerp import fields, models
+from openerp.addons.queue_job.job import job
 
 
 class ShopinvaderPartner(models.Model):
@@ -14,7 +14,7 @@ class ShopinvaderPartner(models.Model):
 
     last_pwd_reset_datetime = fields.Datetime(
         "Last password reset date",
-        help="date of the last password reset of the customer from odoo",
+        help="date of the last password reset of the customer from openerp",
     )
     last_reset_send_datetime = fields.Datetime(
         "Password reset send at", help="date of last password reset sent"
@@ -23,7 +23,7 @@ class ShopinvaderPartner(models.Model):
 
     def _send_reset_password_email(self, template_id, token):
         return (
-            self.env["mail.template"]
+            self.env["email.template")]
             .with_context(token=token)
             .browse(template_id)
             .send_mail(self.id)

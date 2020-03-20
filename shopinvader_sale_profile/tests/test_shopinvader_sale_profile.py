@@ -3,8 +3,8 @@
 # Copyright 2018 ACSONE SA/NV (<http://acsone.eu>)
 # @author Sébastien BEAU <sebastien.beau@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-from odoo.addons.shopinvader.tests.common import CommonCase
-from odoo.exceptions import ValidationError
+from openerp.addons.shopinvader.tests.common import CommonCase
+from openerp.exceptions import ValidationError
 
 
 class TestShopinvaderSaleProfile(CommonCase):
