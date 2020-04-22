@@ -138,7 +138,7 @@ class AddressService(Component):
             "vat",
             "type",
             ("state_id:state", ["id", "name"]),
-            ("country_id:country", ["id", "name"]),
+            ("country_id:country", ["id", "name", "code"]),
             "address_type",
             "is_company",
         ]

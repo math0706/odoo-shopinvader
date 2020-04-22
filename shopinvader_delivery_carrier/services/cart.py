@@ -44,7 +44,7 @@ class CartService(Component):
             "search",
             "delivery_carrier",
         )
-        return self.component("delivery_carrier").search(
+        return self.component("delivery_carriers").search(
             target="current_cart"
         )["rows"]
 

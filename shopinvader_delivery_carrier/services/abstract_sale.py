@@ -51,7 +51,7 @@ class AbstractSaleService(AbstractComponent):
         return result
 
     def _prepare_carrier(self, carrier, no_price=False):
-        service = self.component(usage="delivery_carrier")
+        service = self.component(usage="delivery_carriers")
         return service._prepare_carrier(carrier, no_price=no_price)
 
     def _get_available_carrier(self, cart):

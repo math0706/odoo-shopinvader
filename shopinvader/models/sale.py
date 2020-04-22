@@ -233,6 +233,9 @@ class SaleOrderLine(models.Model):
             )
         for record in self:
             bindings = record.product_id.shopinvader_bind_ids
+            if not bindings:
+                continue
+            binding = bindings[0]
             for binding in bindings:
                 if (
                     binding.backend_id
@@ -241,4 +244,4 @@ class SaleOrderLine(models.Model):
                     continue
                 if lang and binding.lang_id.code != lang:
                     continue
-                record.shopinvader_variant_id = binding
+            record.shopinvader_variant_id = binding
