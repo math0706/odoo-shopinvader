@@ -32,7 +32,7 @@ class ShopinvaderVariant(models.Model):
             attributes = {}
             for attr in record.attribute_set_id.attribute_ids:
                 # all attr start with "x_" we remove it for the export
-                attributes[attr.name[2:]] = record._get_attr_vals(attr)
+                attributes[attr.name[2:]] = record._get_attr_vals(attr) or ""
             record.attributes = attributes
 
     def _compute_structured_attributes(self):
@@ -46,7 +46,7 @@ class ShopinvaderVariant(models.Model):
                     {
                         "name": attr.field_description,
                         "key": attr.name[2:],
-                        "value": record._get_attr_vals(attr),
+                        "value": record._get_attr_vals(attr) or "",
                     }
                 )
             record.structured_attributes = res.values()
