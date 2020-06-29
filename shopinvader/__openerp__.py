@@ -31,6 +31,7 @@
         "onchange_helper",
         "queue_job",
         "product_visible_discount",
+        "base_sparse_field_list_support",
     ],
     "data": [
         "security/shopinvader_security.xml",

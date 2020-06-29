@@ -161,7 +161,7 @@ class ShopinvaderBackend(models.Model):
         domain = [("backend_id", "in", self.ids)]
         for openerp_field, openerp_model in to_count.items():
             if (
-                openerp_model in self.env
+                openerp_model in self.env.registry
                 and self.env[openerp_model]._table_exist()
             ):
                 target_model_obj = self.env[openerp_model]
