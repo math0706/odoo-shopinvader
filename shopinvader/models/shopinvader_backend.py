@@ -302,14 +302,12 @@ class ShopinvaderBackend(models.Model):
             if section.startswith("api_key_") and serv_config.has_option(
                 section, "key"
             ):
-                if tools.consteq(
-                    auth_api_key, serv_config.get(section, "key")
-                ):
+                if auth_api_key == serv_config.get(section, "key"):
                     return section
         return None
 
     @api.model
-    @tools.ormcache("self._uid", "auth_api_key")
+    @tools.ormcache(skiparg=1)
     def _get_id_from_auth_api_key(self, auth_api_key):
         auth_api_key_name = self._get_api_key_name(auth_api_key)
         if auth_api_key_name:
