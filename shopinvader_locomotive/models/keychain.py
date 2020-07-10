@@ -12,3 +12,6 @@ class KeychainAccount(models.Model):
     namespace = fields.Selection(
         selection_add=[("locomotivecms", "LocomotiveCMS")]
     )
+
+    def _locomotivecms_validate_data(self, data):
+        return True

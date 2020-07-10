@@ -19,6 +19,7 @@ class ShopinvaderBackend(models.Model):
         comodel_name="res.currency", string="Currency"
     )
 
+    @api.multi
     def synchronize_metadata(self):
         return self._export_metafields_store()
 
