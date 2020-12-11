@@ -705,11 +705,11 @@ class ProductCase(ProductCommonCase):
         )
         self.assertIn(bind_categ, bind_product.shopinvader_categ_ids)
         urls = bind_product.url_url_ids
-        self.assertEqual(urls.mapped("model_id"), bind_product)
+        self.assertEqual(urls.model_id, bind_product)
         bind_product.write({"active": False})
-        self.assertEqual(urls.mapped("model_id"), bind_categ)
+        self.assertEqual(urls.model_id, bind_categ)
         bind_product.write({"active": True})
-        self.assertEqual(urls.mapped("model_id"), bind_product)
+        self.assertEqual(urls.model_id, bind_product)
 
     def test_product_url2(self):
         """
@@ -765,11 +765,11 @@ class ProductCase(ProductCommonCase):
         self.assertIn(bind_categ_all, bind_product.shopinvader_categ_ids)
         self.assertIn(bind_categ2, bind_product.shopinvader_categ_ids)
         urls = bind_product.url_url_ids
-        self.assertEqual(urls.mapped("model_id"), bind_product)
+        self.assertEqual(urls.model_id, bind_product)
         bind_product.write({"active": False})
-        self.assertEqual(urls.mapped("model_id"), bind_categ2)
+        self.assertEqual(urls.model_id, bind_categ2)
         bind_product.write({"active": True})
-        self.assertEqual(urls.mapped("model_id"), bind_product)
+        self.assertEqual(urls.model_id, bind_product)
         self.assertFalse(bind_product.is_urls_sync_required)
 
     @contextmanager
