@@ -6,6 +6,7 @@
 from contextlib import contextmanager
 
 import mock
+from odoo import fields
 from odoo.addons.base_rest.controllers.main import _PseudoCollection
 from odoo.addons.base_rest.tests.common import BaseRestCase
 from odoo.addons.component.core import WorkContext
@@ -246,3 +247,21 @@ class CommonTestDownload(object):
         :return:
         """
         self._test_download_not_allowed(service, target)
+
+    def _make_payment(self, invoice):
+        """
+        Make the invoice payment
+        :param invoice: account.invoice recordset
+        :return: bool
+        """
+        invoice._post()
+        ctx = {"active_ids": invoice.ids, "active_model": "account.move"}
+        wizard_obj = self.register_payments_obj.with_context(ctx)
+        register_payments = wizard_obj.create(
+            {
+                "payment_date": fields.Date.today(),
+                "journal_id": self.bank_journal_euro.id,
+                "payment_method_id": self.payment_method_manual_in.id,
+            }
+        )
+        register_payments._create_payments()

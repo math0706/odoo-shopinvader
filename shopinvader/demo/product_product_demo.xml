@@ -43,10 +43,12 @@
         </function>
 
     <record id="product_product_chair_vortex_white" model="product.product">
+        <field name="product_tmpl_id" ref="product_template_chair_vortex"/>
         <field name="default_code">VORCHAIR-001</field>
     </record>
 
     <record id="product_product_chair_vortex_blue" model="product.product">
+        <field name="product_tmpl_id" ref="product_template_chair_vortex"/>
         <field name="default_code">VORCHAIR-002</field>
     </record>
 
