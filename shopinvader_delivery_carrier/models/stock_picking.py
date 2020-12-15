@@ -53,11 +53,11 @@ class StockPicking(models.Model):
         )
         return backends
 
-    def action_done(self):
+    def _action_done(self):
         """
         Inherit to update the invoice state if necessary
         :return:
         """
-        result = super(StockPicking, self).action_done()
+        result = super(StockPicking, self)._action_done()
         self._notify_backend("stock_picking_outgoing_validated")
         return result
