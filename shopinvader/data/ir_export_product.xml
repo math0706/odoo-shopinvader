@@ -3,7 +3,7 @@
 
     <record id="ir_exp_shopinvader_variant" model="ir.exports">
         <field name="name">ShopInvader Product Export</field>
-        <field name="resource">shopinvader.variant</field>
+        <field name="model_id" ref="shopinvader.model_shopinvader_variant" />
     </record>
 
     <record id="ir_exp_shopinvader_variant_object_id" model="ir.exports.line">

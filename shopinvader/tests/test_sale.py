@@ -9,7 +9,7 @@ from odoo.tools import mute_logger
 from .common import CommonCase, CommonTestDownload
 
 
-class SaleCase(CommonCase, CommonTestDownload):
+class CommonSaleCase(CommonCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -25,10 +25,12 @@ class SaleCase(CommonCase, CommonTestDownload):
         )
 
     def setUp(self, *args, **kwargs):
-        super(SaleCase, self).setUp(*args, **kwargs)
+        super().setUp(*args, **kwargs)
         with self.work_on_services(partner=self.partner) as work:
             self.service = work.component(usage="sales")
 
+
+class SaleCase(CommonSaleCase, CommonTestDownload):
     def _confirm_and_invoice_sale(self):
         self.sale.action_confirm()
         for line in self.sale.order_line:
@@ -103,24 +105,6 @@ class SaleCase(CommonCase, CommonTestDownload):
         self.service.dispatch("ask_email_invoice", self.sale.id)
         self.assertEquals(self.env["queue.job"].search_count(domain), 1)
 
-    def _make_payment(self, invoice):
-        """
-        Make the invoice payment
-        :param invoice: account.invoice recordset
-        :return: bool
-        """
-        invoice.post()
-        ctx = {"active_ids": invoice.ids}
-        wizard_obj = self.register_payments_obj.with_context(ctx)
-        register_payments = wizard_obj.create(
-            {
-                "payment_date": fields.Date.today(),
-                "journal_id": self.bank_journal_euro.id,
-                "payment_method_id": self.payment_method_manual_in.id,
-            }
-        )
-        register_payments.create_payments()
-
     def test_invoice_01(self):
         """
         Data
@@ -131,7 +115,7 @@ class SaleCase(CommonCase, CommonTestDownload):
             * No invoice information returned
         """
         self._confirm_and_invoice_sale()
-        self.assertNotEqual(self.invoice.invoice_payment_state, "paid")
+        self.assertNotEqual(self.invoice.payment_state, "paid")
         res = self.service.get(self.sale.id)
         self.assertFalse(res["invoices"])
 
@@ -146,7 +130,7 @@ class SaleCase(CommonCase, CommonTestDownload):
         """
         self._confirm_and_invoice_sale()
         self._make_payment(self.invoice)
-        self.assertEqual(self.invoice.invoice_payment_state, "paid")
+        self.assertEqual(self.invoice.payment_state, "paid")
         res = self.service.get(self.sale.id)
         self.assertTrue(res)
         self.assertEqual(
