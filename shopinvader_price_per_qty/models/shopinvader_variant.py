@@ -8,8 +8,7 @@ from openerp import models
 class ShopinvaderVariant(models.Model):
     _inherit = "shopinvader.variant"
 
-    def _get_price(self, pricelist, fposition):
-        vals = super(ShopinvaderVariant, self)._get_price(pricelist, fposition)
+    def _get_qty_step(self):
         items = self.env["product.pricelist.item"].search(
             [
                 "|",
@@ -25,12 +24,17 @@ class ShopinvaderVariant(models.Model):
                 ("product_tmpl_id", "=", False),
             ]
         )
-        item_qty = {item.min_quantity for item in items if item.min_quantity > 1}
-        vals["price_per_qty"] = {}
-        for qty in item_qty:
-            if qty == 1:
-                continue
-            vals["price_per_qty"][qty] = self._get_price_per_qty(
-                qty, pricelist, fposition
-            )["value"]
-        return vals
+        return sorted({item.min_quantity for item in items if item.min_quantity > 1})
+
+    def _get_price(self, qty=1.0, pricelist=None, fposition=None, company=None):
+        res = super()._get_price(
+            qty=qty, pricelist=pricelist, fposition=fposition, company=company
+        )
+        if qty == 1.0:
+            res["per_qty"] = {
+                qty: self._get_price(
+                    qty=qty, pricelist=pricelist, fposition=fposition, company=company
+                )["value"]
+                for qty in self._get_qty_step()
+            }
+        return res
