@@ -1,5 +1,5 @@
-from odoo.addons.component.core import Component
 from odoo.addons.base_rest import restapi
+from odoo.addons.component.core import Component
 
 
 class SaleService(Component):
