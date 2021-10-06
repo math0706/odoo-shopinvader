@@ -2,7 +2,7 @@
 # @author Sébastien BEAU <sebastien.beau@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models
+from openerp import fields, models
 
 
 class ShopinvaderVariant(models.Model):
@@ -22,6 +22,12 @@ class ShopinvaderVariant(models.Model):
                 ("product_id", "=", False),
                 ("categ_id", "=", False),
                 ("product_tmpl_id", "=", False),
+                "|",
+                ("date_start", "<=", fields.datetime.now()),
+                ("date_start", "=", False),
+                "|",
+                ("date_end", ">=", fields.datetime.now()),
+                ("date_end", "=", False),
             ]
         )
         return sorted({item.min_quantity for item in items if item.min_quantity > 1})
