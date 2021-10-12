@@ -7,6 +7,7 @@ class SaleService(Component):
     _inherit = "shopinvader.sale.service"
     _usage = "sales"
 
+    # Use a more robust decorator inheritance when it's possible
     @restapi.method(
         routes=[(["/<int:_id>/download"], "GET")],
         input_param=restapi.CerberusValidator("_get_download_schema"),
@@ -32,10 +33,12 @@ class SaleService(Component):
         :param params: dict
         :return: dict/action
         """
-        # Choose the report according to the parameter
-        report = (
-            "sale_order_report_without_price.action_report_saleorder_without_price"
-            if params and params.get("no_price")
-            else "sale.action_report_saleorder"
-        )
-        return self.env.ref(report).report_action(target, config=False)
+        # Choose the no_price report according to the parameter
+        if params.get("no_price"):
+            report = (
+                "sale_order_report_without_price.action_report_saleorder_without_price"
+            )
+            return self.env.ref(report).report_action(target, config=False)
+
+        # Or delegate to the parent
+        return super()._get_report_action(target, params)
