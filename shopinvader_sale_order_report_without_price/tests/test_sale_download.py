@@ -1,7 +1,7 @@
-from odoo.addons.shopinvader.tests.test_sale import CommonSaleCase
-from odoo.addons.shopinvader.services import abstract_download
-
 import mock
+
+from odoo.addons.shopinvader.services import abstract_download
+from odoo.addons.shopinvader.tests.test_sale import CommonSaleCase
 
 
 class SaleCase(CommonSaleCase):
