@@ -86,6 +86,14 @@ class ExportSettingsService(Component):
             "name",
             "code",
             "id",
+            ("state_ids", self._jsonify_fields_state()),
+        ]
+
+    def _jsonify_fields_state(self):
+        return [
+            "name",
+            "code",
+            "id",
         ]
 
     def _get_countries(self):
@@ -94,6 +102,31 @@ class ExportSettingsService(Component):
         )
 
     def _get_countries_schema(self):
+        return {
+            "name": {
+                "type": "string",
+                "required": True,
+                "nullable": False,
+            },
+            "code": {
+                "type": "string",
+                "required": True,
+                "nullable": False,
+            },
+            "id": {
+                "type": "integer",
+                "required": True,
+                "nullable": False,
+            },
+            "state_ids": {
+                "type": "list",
+                "required": True,
+                "nullable": False,
+                "schema": {"type": "dict", "schema": self._get_states_schema()},
+            },
+        }
+
+    def _get_states_schema(self):
         return {
             "name": {
                 "type": "string",
